@@ -47,14 +47,14 @@ export const AiToolsData = [
         description: 'Effortlessly remove backgrounds from your images with our AI-driven tool.',
         Icon: Eraser,
         bg: { from: '#F76C1C', to: '#F04A3C' },
-        path: '/ai/remove-background'
+        path: '/ai/remove-bg'
     },
     {
         title: 'Object Removal',
         description: 'Remove unwanted objects from your images seamlessly with our AI object removal tool.',
         Icon: Scissors,
         bg: { from: '#5C6AF1', to: '#427DF5' },
-        path: '/ai/remove-object'
+        path: '/ai/remove-obj'
     },
     {
         title: 'Resume Reviewer',
