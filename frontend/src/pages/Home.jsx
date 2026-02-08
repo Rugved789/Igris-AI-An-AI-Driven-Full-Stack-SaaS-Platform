@@ -1,3 +1,4 @@
+import Footer from "../components/Footer"
 import Hero from "../components/Hero"
 import Navbar from "../components/Navbar"
 import Testomonial from "../components/Testimonial"
@@ -9,6 +10,7 @@ const Home = () => (
     <Hero />
     <Tools />
     <Testomonial/>
+    <Footer/>
   </div>
 )
 

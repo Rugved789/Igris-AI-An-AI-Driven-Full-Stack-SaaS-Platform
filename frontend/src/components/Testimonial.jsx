@@ -1,8 +1,8 @@
 const Testimonial = () => {
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="flex flex-col items-center text-center mb-20">
       <h1 className="text-4xl font-bold max-w-[740px] mb-[72px]">
-        Trusted by <span className="text-blue-600">30k+</span> world class
+        Trusted by <span className="text-primary">100+</span> world class
         companies & design teams
       </h1>
       <div className="flex flex-wrap items-center justify-center gap-4">

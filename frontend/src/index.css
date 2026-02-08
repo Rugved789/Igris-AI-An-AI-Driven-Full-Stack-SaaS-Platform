@@ -5,6 +5,9 @@
 *{
   font-family: "Outfit", sans-serif;
 }
+html{
+  scroll-behavior: smooth;
+}
 
 @theme{
   --color-primary:#5044E5

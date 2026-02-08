@@ -5,7 +5,7 @@ const Hero = () => {
     const navigate=useNavigate();
 
   return (
-    <div className="px-4 sm:px-40 lg:32 relative inline-flex flex-col w-full justify-center bg-[url(/gradientBackground.png)] bg-cover bg-no-repeat min-h-screen">
+    <div id="hero"className="px-4 sm:px-40 lg:32 relative inline-flex flex-col w-full justify-center bg-[url(/gradientBackground.png)] bg-cover bg-no-repeat min-h-screen">
       <div className="text-center mb-6">
         <h1 className="text-3xl sm:text-4xl md:text-5xl 2xl:text-6xl font-semibold mx-auto leading-[1.2]">
           Create amazing content
