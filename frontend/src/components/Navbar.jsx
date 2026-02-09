@@ -3,12 +3,14 @@ import { assets } from "../assets/assets";
 import { ArrowRight } from "lucide-react";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 
-const Navbar = () => {
+const Navbar = (props) => {
   const navigate = useNavigate();
   const { user } = useUser();
   const { openSignIn } = useClerk();
   return (
-    <div className="fixed z-5 w-full backdrop-blur-2xl flex justify-between items-center py-3 px-4 sm:px-20 xl:px-32">
+    <div className={`fixed z-5 w-full backdrop-blur-2xl flex justify-between items-center py-3 px-4 sm:px-20 border-b border-gray-200 ${
+        props.extraPadding ? `xl:${props.extraPadding}` : "xl:px-32"
+      }`}>
       <img
         src={assets.logo}
         alt="logo"
@@ -27,6 +29,7 @@ const Navbar = () => {
       )}
     </div>
   );
+  
 };
 
 export default Navbar;
