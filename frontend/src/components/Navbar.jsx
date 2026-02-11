@@ -8,13 +8,13 @@ const Navbar = (props) => {
   const { user } = useUser();
   const { openSignIn } = useClerk();
   return (
-    <div className={`fixed z-5 w-full backdrop-blur-2xl flex justify-between items-center py-3 px-4 sm:px-20 border-b border-gray-200 ${
+    <div className={`fixed z-5 w-full backdrop-blur-2xl flex justify-between items-center py-3 px-4 sm:px-10 border-b border-gray-200 ${
         props.extraPadding ? `xl:${props.extraPadding}` : "xl:px-32"
       }`}>
       <img
         src={assets.logo}
         alt="logo"
-        className="w-32 sm:w-44 cursor-pointer"
+        className="w-35 sm:w-50 cursor-pointer"
         onClick={() => {
           navigate("/");
         }}

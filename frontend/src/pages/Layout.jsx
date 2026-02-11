@@ -10,8 +10,8 @@ const Layout = () => {
   const {user} = useUser();
   return  user ? (
     <div className="flex flex-col items-start justify-start h-screen">
-      <Navbar extraPadding="px-15" />
-      <div className="mt-15 sm:mt-70 px-4 sm:hidden">
+      <Navbar extraPadding="px-5" />
+      <div className="mt-15 sm:mt-70 px-2 sm:hidden">
         {sidebar ? (
           <X
             className="w-6 h-6 cursor-pointer text-gray-600"
@@ -30,7 +30,7 @@ const Layout = () => {
       </div>
       <div className="flex-1 w-full flex h-[calc(100vh-64px)]">
         <SideBar sidebar={sidebar} setSidebar={setsidebar} />
-        <div className="flex-1 bg-[#F4F7FB] overflow-y-auto sm:mt-17">
+        <div className="flex-1 bg-[#F4F7FB] overflow-y-auto sm:mt-19">
           <Outlet />
         </div>
       </div>

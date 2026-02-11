@@ -5,6 +5,7 @@ import {
   Hash,
   House,
   Image,
+  LogOut,
   Scissors,
   SquarePen,
   Users,
@@ -75,6 +76,21 @@ const SideBar = ({ sidebar, setSidebar }) => {
             );
           })}
         </div>
+      </div>
+
+      <div className="flex items-center w-full p-4 px-7 justify-between border-t border-gray-200">
+        <div onClick={openUserProfile} className="flex gap-2 items-center cursor-pointer">
+          <img
+            src={user.imageUrl}
+            alt="user image"
+            className="w-8 rounded-full mx-auto"
+          />
+          <span className="text-sm font-medium">{user.fullName}</span>
+        </div>
+        <LogOut
+          onClick={signOut}
+          className="w-4.5 text-gray-400 hover:text-gray-700 transition cursor-pointer"
+        />
       </div>
     </div>
   );
