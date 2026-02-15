@@ -26,7 +26,7 @@ const BlogTitles = () => {
         </div>
         <p
           className="mt-6 text-lg
-        font-semibold"
+        font-medium"
         >
           Keyword
         </p>
@@ -43,7 +43,7 @@ const BlogTitles = () => {
 
         <p
           className="mt-6 text-lg
-        font-semibold"
+        font-medium"
         >
           Category
         </p>

@@ -35,7 +35,7 @@ const GenerateImage = () => {
         </div>
         <p
           className="mt-6 text-lg
-        font-semibold"
+        font-medium"
         >
           Describe Your Images
         </p>
@@ -52,7 +52,7 @@ const GenerateImage = () => {
 
         <p
           className="mt-6 text-lg
-        font-semibold"
+        font-medium"
         >
           Style
         </p>

@@ -28,7 +28,7 @@ const WriteArticle = () => {
         </div>
         <p
           className="mt-6 text-lg
-        font-semibold"
+        font-medium"
         >
           Article Title
         </p>
@@ -45,7 +45,7 @@ const WriteArticle = () => {
 
         <p
           className="mt-6 text-lg
-        font-semibold"
+        font-medium"
         >
           Article Length
         </p>
