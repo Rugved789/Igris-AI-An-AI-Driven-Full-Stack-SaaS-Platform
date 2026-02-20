@@ -47,7 +47,7 @@ const SideBar = ({ sidebar, setSidebar }) => {
 
         <h1 className="mt-1 text-center">{user.fullName}</h1>
 
-        <div className="px-6 mt-5 text-sm text-gray-600 font-medium ">
+        <div className="px-6 mt-5 text-sx text-gray-600 font-medium ">
           {SideBarItems.map(({ Name, to, Icon }) => {
             return (
               <NavLink

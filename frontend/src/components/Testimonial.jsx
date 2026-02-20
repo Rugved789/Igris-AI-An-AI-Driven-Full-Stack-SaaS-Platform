@@ -6,7 +6,7 @@ const Testimonial = () => {
         companies & design teams
       </h1>
       <div className="flex flex-wrap items-center justify-center gap-4">
-        <div className="flex flex-col items-center bg-white px-3 py-8 rounded-lg border border-gray-300/80 max-w-[272px] text-sm text-center text-gray-500">
+        <div className="flex flex-col items-center bg-white px-3 py-8 rounded-lg border border-gray-300/80 max-w-[272px] text-sm text-center text-gray-500 shadow-lg border border-gray-100 hover:-translate-y-1 transition-all duration-300">
           <div className="relative mb-4">
             <img
               className="h-16 w-16 rounded-full"
@@ -36,7 +36,7 @@ const Testimonial = () => {
           </p>
           <p className="text-xs">Content Creator</p>
         </div>
-        <div className="flex flex-col items-center bg-white px-3 py-8 rounded-lg border border-gray-300/80 max-w-[272px] text-sm text-center text-gray-500">
+        <div className="flex flex-col items-center bg-white px-3 py-8 rounded-lg border border-gray-300/80 max-w-[272px] text-sm text-center text-gray-500 shadow-lg border border-gray-100 hover:-translate-y-1 transition-all duration-300">
           <div className="relative mb-4">
             <img
               className="h-16 w-16 rounded-full"
@@ -66,7 +66,7 @@ const Testimonial = () => {
           </p>
           <p className="text-xs">Content Writer</p>
         </div>
-        <div className="flex flex-col items-center bg-white px-3 py-8 rounded-lg border border-gray-300/80 max-w-[272px] text-sm text-center text-gray-500">
+        <div className="flex flex-col items-center bg-white px-3 py-8 rounded-lg border border-gray-300/80 max-w-[272px] text-sm text-center text-gray-500 shadow-lg border border-gray-100 hover:-translate-y-1 transition-all duration-300">
           <div className="relative mb-4">
             <img
               className="h-16 w-16 rounded-full"

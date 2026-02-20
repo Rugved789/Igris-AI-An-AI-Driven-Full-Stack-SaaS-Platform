@@ -133,7 +133,7 @@ const Footer = () => {
           </a>
         </div>
         <p className="mt-8 text-center">
-          Copyright © 2025 <a href="https://prebuiltui.com">Igris.Ai</a>. All
+          Copyright © 2025 <a>Igris.Ai</a>. All
           rights reservered.
         </p>
       </footer>

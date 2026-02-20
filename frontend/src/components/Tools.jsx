@@ -8,7 +8,7 @@ const Tools = () => {
   return (
     <div id="tools" className="px-4 sm:px-20 xl:32 my-24">
       <div className="text-center">
-        <h2 className="text-slate-700 text-[42px] font-semibold">
+        <h2 className="text-[40px] font-semibold">
           Powerful AI Tools
         </h2>
         <p className="text-gray-500 max-w-lg mx-auto">
@@ -34,7 +34,7 @@ const Tools = () => {
                 }}
               />
               <h3 className="mt-6 mb-3 text-lg font-semibold">{tool.title}</h3>
-              <p className="text-gray-400 text-sm max-w-[%95]">{tool.description}</p>
+              <p className="text-gray-500 text-sm max-w-[%95]">{tool.description}</p>
             </div>
           );
         })}
