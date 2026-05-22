@@ -128,3 +128,75 @@ export const generateImage = async (req, res) => {
     });
   }
 };
+
+export const removeBg = async (req, res) => {
+  try {
+    const authData = req.auth?.();
+    const { userId } = authData ?? {};
+    const { image } = req.file;
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const { secure_url } = await cloudinary.uploader.upload(image.path, {
+      transformation: [
+        {
+          effect: "background_removal",
+          background_removal: "remove_the_background",
+        },
+      ],
+    });
+
+    await sql` INSERT INTO creations (user_id,prompt,content,type) values (${userId},'Remove background from the image',${secure_url},'background-removal'`;
+
+    res.json({ success: true, secure_url });
+  } catch (error) {
+    const status = error.response?.status;
+    const message = error.response?.data
+      ? Buffer.from(error.response.data).toString("utf8")
+      : error.message;
+
+    console.log(status, message);
+    return res.status(status || 500).json({
+      success: false,
+      message,
+    });
+  }
+};
+
+export const removeObj = async (req, res) => {
+  try {
+    const authData = req.auth?.();
+    const { userId } = authData ?? {};
+    const { image } = req.file;
+    const { object } = req.object;
+
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const { public_id } = await cloudinary.uploader.upload(image.path);
+
+    const image_url = cloudinary.url(public_id, {
+      transformation: [{ effect: `gen_remove:${object}` }],
+      resource_type: "image",
+    });
+
+    await sql` INSERT INTO creations (user_id,prompt,content,type) values (${userId},${`Remove ${object} from image`},${image_url},'Object-removal'`;
+
+    res.json({ success: true, image_url });
+  } catch (error) {
+    const status = error.response?.status;
+    const message = error.response?.data
+      ? Buffer.from(error.response.data).toString("utf8")
+      : error.message;
+
+    console.log(status, message);
+    return res.status(status || 500).json({
+      success: false,
+      message,
+    });
+  }
+};
+
