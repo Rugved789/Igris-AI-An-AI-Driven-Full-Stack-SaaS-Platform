@@ -2,6 +2,9 @@ import OpenAI from "openai";
 import sql from "../configs/db.js";
 import axios from "axios";
 import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
+import * as pdfParse from "pdf-parse";
+const pdf = pdfParse.default ?? pdfParse;
 
 const AI = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -199,4 +202,54 @@ export const removeObj = async (req, res) => {
     });
   }
 };
+export const reviewResume = async (req, res) => {
+  try {
+    const authData = req.auth?.();
+    const { userId } = authData ?? {};
+    const resume = req.file;
 
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    if (resume.size > 5 * 1024 * 1024) {
+      return res.json({
+        success: false,
+        message: "Resume file size exceeds allowed size (5MB).",
+      });
+    }
+    const dataBuffer = fs.readFileSync(resume.path);
+    const pdfData = await pdf(dataBuffer);
+
+    const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content:\n\n${pdfData.text}`;
+
+    const response = await AI.chat.completions.create({
+      model: "gemini-3.5-flash",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: 0.7,
+      max_tokens: 1000,
+    });
+
+    const content = response.choices[0].message.content;
+
+    await sql` INSERT INTO creations (user_id,prompt,content,type) values (${userId},"Review the uploaded resume",${content},'Resume-Review'`;
+
+    res.json({ success: true, content });
+  } catch (error) {
+    const status = error.response?.status;
+    const message = error.response?.data
+      ? Buffer.from(error.response.data).toString("utf8")
+      : error.message;
+
+    console.log(status, message);
+    return res.status(status || 500).json({
+      success: false,
+      message,
+    });
+  }
+};
