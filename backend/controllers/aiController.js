@@ -21,22 +21,25 @@ export const generateArticle = async (req, res) => {
     }
 
     const { prompt, length } = req.body;
+    const targetWords = Number(length) || 800;
+    const maxTokens = Math.max(6000, Math.ceil(targetWords * 4));
+    const articlePrompt = `${prompt}\n\nWrite a complete, well-structured article of at least ${targetWords} words. Do not stop early. Return only the article content.`;
 
     const response = await AI.chat.completions.create({
       model: "gemini-3.5-flash",
       messages: [
         {
           role: "user",
-          content: prompt,
+          content: articlePrompt,
         },
       ],
       temperature: 0.7,
-      max_tokens: length,
+      max_tokens: maxTokens,
     });
 
-    const content = response.choices[0].message.content;
+    const content = response.choices[0].message.content ?? "";
 
-    await sql` INSERT INTO creations (user_id,prompt,content,type) values (${userId},${prompt},${content},'write-article')`;
+    await sql` INSERT INTO creations (user_id,prompt,content,type) values (${userId},${articlePrompt},${content},'write-article')`;
 
     res.json({ success: true, content });
   } catch (error) {
