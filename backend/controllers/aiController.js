@@ -26,7 +26,7 @@ export const generateArticle = async (req, res) => {
     const articlePrompt = `${prompt}\n\nWrite a complete, well-structured article of at least ${targetWords} words. Do not stop early. Return only the article content.`;
 
     const response = await AI.chat.completions.create({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       messages: [
         {
           role: "user",
@@ -67,11 +67,11 @@ export const generateBlogTitles = async (req, res) => {
           content: prompt,
         },
       ],
-      temperature: 0.7,
-      max_tokens: 100,
+      temperature: 0.8,
+      max_tokens: 2000,
     });
 
-    const content = response.choices[0].message.content;
+    const content = response.choices[0].message.content ?? "";
 
     await sql` INSERT INTO creations (user_id,prompt,content,type) values (${userId},${prompt},${content},'blog-title')`;
 
