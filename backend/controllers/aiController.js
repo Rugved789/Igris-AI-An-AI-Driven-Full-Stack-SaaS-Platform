@@ -139,10 +139,14 @@ export const removeBg = async (req, res) => {
   try {
     const authData = req.auth?.();
     const { userId } = authData ?? {};
-    const { image } = req.file;
+    const  image  = req.file;
 
     if (!userId) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    if (!image || !image.path) {
+      return res.status(400).json({ success: false, message: "No image uploaded" });
     }
 
     const { secure_url } = await cloudinary.uploader.upload(image.path, {
@@ -154,7 +158,15 @@ export const removeBg = async (req, res) => {
       ],
     });
 
-    await sql` INSERT INTO creations (user_id,prompt,content,type) values (${userId},'Remove background from the image',${secure_url},'background-removal'`;
+    // record creation
+    await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${"Remove background from the image"}, ${secure_url}, ${"background-removal"})`;
+
+    // cleanup uploaded file
+    try {
+      fs.unlinkSync(image.path);
+    } catch (err) {
+      // ignore cleanup errors
+    }
 
     res.json({ success: true, secure_url });
   } catch (error) {
@@ -162,8 +174,6 @@ export const removeBg = async (req, res) => {
     const message = error.response?.data
       ? Buffer.from(error.response.data).toString("utf8")
       : error.message;
-
-    console.log(status, message);
     return res.status(status || 500).json({
       success: false,
       message,

@@ -34,7 +34,7 @@ const SideBar = ({ sidebar, setSidebar }) => {
 
   return (
     <div
-      className={`w-60 bg-white border-r border-gray-200 flex flex-col justify-between items-center mt-7 max-sm:absolute top-14 bottom-0 ${
+      className={`w-70 bg-white border-r border-gray-200 flex flex-col justify-between items-center mt-7 max-sm:absolute top-14 bottom-0 ${
         sidebar ? "translate-x-0" : "max-sm:-translate-x-full"
       } transition-all duration-300`}
     >

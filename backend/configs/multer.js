@@ -1,5 +1,11 @@
-import multer from "multer"
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 
-const storage = multer.diskStorage({});
+const uploadDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadDir)) {
+	fs.mkdirSync(uploadDir, { recursive: true });
+}
 
-export const upload = multer({storage});
+// Store uploaded files on disk under ./uploads
+export const upload = multer({ dest: uploadDir });
