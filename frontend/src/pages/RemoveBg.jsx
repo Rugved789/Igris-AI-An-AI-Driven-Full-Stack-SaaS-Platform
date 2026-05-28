@@ -136,7 +136,7 @@ const RemoveBg = () => {
 
             <button
               onClick={downloadImage}
-              className="bg-linear-to-r from-[#00AD25] to-[#04FF50] text-white py-2 rounded-xl cursor-pointer"
+              className="bg-linear-to-r from-[#F6AB41] to-[#FF4938] text-white py-2 rounded-xl cursor-pointer"
             >
               Download Image
             </button>

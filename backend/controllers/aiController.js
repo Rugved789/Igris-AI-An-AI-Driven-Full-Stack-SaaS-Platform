@@ -185,21 +185,36 @@ export const removeObj = async (req, res) => {
   try {
     const authData = req.auth?.();
     const { userId } = authData ?? {};
-    const { image } = req.file;
-    const { object } = req.object;
+    const image = req.file;
+    const { object } = req.body;
 
     if (!userId) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
+    if (!image || !image.path) {
+      return res.status(400).json({ success: false, message: "No image uploaded" });
+    }
 
-    const { public_id } = await cloudinary.uploader.upload(image.path);
+    if (!object || typeof object !== "string") {
+      return res.status(400).json({ success: false, message: "Missing 'object' field in request body" });
+    }
+
+    const uploadResult = await cloudinary.uploader.upload(image.path);
+    const public_id = uploadResult.public_id;
 
     const image_url = cloudinary.url(public_id, {
       transformation: [{ effect: `gen_remove:${object}` }],
       resource_type: "image",
     });
 
-    await sql` INSERT INTO creations (user_id,prompt,content,type) values (${userId},${`Remove ${object} from image`},${image_url},'Object-removal'`;
+    await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${"Remove " + object + " from image"}, ${image_url}, ${"Object-removal"})`;
+
+    // cleanup uploaded file
+    try {
+      fs.unlinkSync(image.path);
+    } catch (err) {
+      // ignore
+    }
 
     res.json({ success: true, image_url });
   } catch (error) {
@@ -208,13 +223,14 @@ export const removeObj = async (req, res) => {
       ? Buffer.from(error.response.data).toString("utf8")
       : error.message;
 
-    console.log(status, message);
     return res.status(status || 500).json({
       success: false,
       message,
     });
   }
 };
+
+
 export const reviewResume = async (req, res) => {
   try {
     const authData = req.auth?.();
