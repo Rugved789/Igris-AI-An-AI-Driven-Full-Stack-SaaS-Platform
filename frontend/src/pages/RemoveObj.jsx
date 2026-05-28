@@ -24,21 +24,17 @@ const RemoveObj = () => {
     try {
       setLoading(true);
 
-      if(object.split(" ").length > 1){
+      if (object.split(" ").length > 1) {
         return toast("Please enter only one object name");
       }
 
       const formData = new FormData();
-      formData.append('image', input);
-      formData.append('object', object);
+      formData.append("image", input);
+      formData.append("object", object);
 
-      const { data } = await axios.post(
-        "/api/ai/remove-obj",
-        formData,
-        {
-          headers: { Authorization: `Bearer ${await getToken()}` },
-        },
-      );
+      const { data } = await axios.post("/api/ai/remove-obj", formData, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
 
       if (data.success) {
         setContent(data.image_url);
@@ -125,7 +121,11 @@ const RemoveObj = () => {
           className="bg-linear-to-r from-[#417DF6] to-[#8E37EB] text-white flex gap-3 w-full justify-center rounded-xl items-center 
         px-4 py-2 mt-6 cursor-pointer "
         >
-          <Scissors className="w-6" />
+          {loading ? (
+            <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>
+          ) : (
+            <Scissors className="w-6" />
+          )}
           Remove object
         </button>
       </form>

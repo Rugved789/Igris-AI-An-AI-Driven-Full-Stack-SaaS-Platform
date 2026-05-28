@@ -3,8 +3,7 @@ import sql from "../configs/db.js";
 import axios from "axios";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import * as pdfParse from "pdf-parse";
-const pdf = pdfParse.default ?? pdfParse;
+import { PDFParse } from "pdf-parse";
 
 const AI = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -60,7 +59,7 @@ export const generateBlogTitles = async (req, res) => {
     const { prompt } = req.body;
 
     const response = await AI.chat.completions.create({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       messages: [
         {
           role: "user",
@@ -241,6 +240,10 @@ export const reviewResume = async (req, res) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
+    if (!resume || !resume.path) {
+      return res.status(400).json({ success: false, message: "No resume uploaded" });
+    }
+
     if (resume.size > 5 * 1024 * 1024) {
       return res.json({
         success: false,
@@ -248,12 +251,14 @@ export const reviewResume = async (req, res) => {
       });
     }
     const dataBuffer = fs.readFileSync(resume.path);
-    const pdfData = await pdf(dataBuffer);
+    const parser = new PDFParse({ data: dataBuffer });
+    const pdfData = await parser.getText();
+    await parser.destroy();
 
     const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content:\n\n${pdfData.text}`;
 
     const response = await AI.chat.completions.create({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       messages: [
         {
           role: "user",
@@ -261,12 +266,18 @@ export const reviewResume = async (req, res) => {
         },
       ],
       temperature: 0.7,
-      max_tokens: 1000,
+      max_tokens: 4000,
     });
 
     const content = response.choices[0].message.content;
 
-    await sql` INSERT INTO creations (user_id,prompt,content,type) values (${userId},"Review the uploaded resume",${content},'Resume-Review'`;
+    await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${"Review the uploaded resume"}, ${content}, ${"Resume-Review"})`;
+
+    try {
+      fs.unlinkSync(resume.path);
+    } catch (err) {
+      // ignore cleanup errors
+    }
 
     res.json({ success: true, content });
   } catch (error) {
@@ -274,8 +285,6 @@ export const reviewResume = async (req, res) => {
     const message = error.response?.data
       ? Buffer.from(error.response.data).toString("utf8")
       : error.message;
-
-    console.log(status, message);
     return res.status(status || 500).json({
       success: false,
       message,
