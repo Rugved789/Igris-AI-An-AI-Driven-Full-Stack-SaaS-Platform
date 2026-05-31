@@ -3,7 +3,6 @@ import sql from "../configs/db.js";
 import axios from "axios";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
-import { PDFParse } from "pdf-parse";
 
 const AI = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -231,10 +230,13 @@ export const removeObj = async (req, res) => {
 
 
 export const reviewResume = async (req, res) => {
+  let resumePath;
+
   try {
     const authData = req.auth?.();
     const { userId } = authData ?? {};
     const resume = req.file;
+    resumePath = resume?.path;
 
     if (!userId) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
@@ -251,9 +253,18 @@ export const reviewResume = async (req, res) => {
       });
     }
     const dataBuffer = fs.readFileSync(resume.path);
-    const parser = new PDFParse({ data: dataBuffer });
-    const pdfData = await parser.getText();
-    await parser.destroy();
+    const { default: pdfParse } = await import("../node_modules/pdf-parse/lib/pdf-parse.js");
+    const pdf = typeof pdfParse === "function" ? pdfParse : pdfParse.default;
+    let pdfData;
+
+    try {
+      pdfData = await pdf(dataBuffer);
+    } catch (parseError) {
+      return res.status(400).json({
+        success: false,
+        message: "Unable to read the uploaded PDF. Please upload a valid text-based PDF resume.",
+      });
+    }
 
     const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content:\n\n${pdfData.text}`;
 
@@ -273,12 +284,6 @@ export const reviewResume = async (req, res) => {
 
     await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${"Review the uploaded resume"}, ${content}, ${"Resume-Review"})`;
 
-    try {
-      fs.unlinkSync(resume.path);
-    } catch (err) {
-      // ignore cleanup errors
-    }
-
     res.json({ success: true, content });
   } catch (error) {
     const status = error.response?.status;
@@ -289,5 +294,13 @@ export const reviewResume = async (req, res) => {
       success: false,
       message,
     });
+  } finally {
+    if (resumePath) {
+      try {
+        fs.unlinkSync(resumePath);
+      } catch (err) {
+        // ignore cleanup errors
+      }
+    }
   }
 };
