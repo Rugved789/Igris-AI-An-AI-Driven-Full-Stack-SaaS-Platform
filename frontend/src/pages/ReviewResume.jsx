@@ -40,26 +40,7 @@ const ReviewResume = () => {
     setLoading(false);
   };
 
-  const downloadImage = async () => {
-    try {
-      const response = await fetch(content);
-      const blob = await response.blob();
-
-      const url = window.URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "ai-image.png";
-
-      document.body.appendChild(link);
-      link.click();
-
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      toast.error("Failed to download image");
-    }
-  };
+  
 
   return (
     <div className="h-full overflow-y-scroll p-6 flex items-start flex-wrap gap-10 text-slate-700">

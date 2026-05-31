@@ -21,7 +21,7 @@ const Creations = ({ item }) => {
       </div>
       {expanded && (
         <div>
-          {item.type === "image" ? (
+          {item.type === 'image-generation' ? (
             <div>
               <img
                 src={item.content}
