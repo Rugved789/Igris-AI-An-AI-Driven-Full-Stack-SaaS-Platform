@@ -24,7 +24,7 @@ export const generateArticle = async (req, res) => {
     const articlePrompt = `${prompt}\n\nWrite a complete, well-structured article of at least ${targetWords} words. Do not stop early. Return only the article content.`;
 
     const response = await AI.chat.completions.create({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       messages: [
         {
           role: "user",
@@ -58,7 +58,7 @@ export const generateBlogTitles = async (req, res) => {
     const { prompt } = req.body;
 
     const response = await AI.chat.completions.create({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash",
       messages: [
         {
           role: "user",
@@ -66,7 +66,7 @@ export const generateBlogTitles = async (req, res) => {
         },
       ],
       temperature: 0.8,
-      max_tokens: 1000,
+      max_tokens: 1500,
     });
 
     const content = response.choices[0].message.content ?? "";

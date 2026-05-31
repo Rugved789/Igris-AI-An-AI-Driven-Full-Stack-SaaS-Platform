@@ -25,7 +25,7 @@ const RemoveObj = () => {
       setLoading(true);
 
       if (object.split(" ").length > 1) {
-        return toast("Please enter only one object name");
+        return toast("Please enter only one specific object details");
       }
 
       const formData = new FormData();
