@@ -266,7 +266,16 @@ export const reviewResume = async (req, res) => {
       });
     }
 
-    const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content:\n\n${pdfData.text}`;
+    const resumeText = (pdfData.text ?? "").trim().slice(0, 12000);
+
+    if (!resumeText) {
+      return res.status(400).json({
+        success: false,
+        message: "No readable text was found in the uploaded PDF. Please upload a text-based resume.",
+      });
+    }
+
+    const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content:\n\n${resumeText}`;
 
     const response = await AI.chat.completions.create({
       model: "gemini-2.5-flash",
@@ -280,9 +289,20 @@ export const reviewResume = async (req, res) => {
       max_tokens: 4000,
     });
 
-    const content = response.choices[0].message.content;
+    const content = response.choices?.[0]?.message?.content?.trim();
 
-    await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${"Review the uploaded resume"}, ${content}, ${"Resume-Review"})`;
+    if (!content) {
+      return res.status(502).json({
+        success: false,
+        message: "The AI service returned an empty resume review. Please try again.",
+      });
+    }
+
+    try {
+      await sql`INSERT INTO creations (user_id, prompt, content, type) VALUES (${userId}, ${"Review the uploaded resume"}, ${content}, ${"Resume-Review"})`;
+    } catch (dbError) {
+      console.error("Failed to save resume review:", dbError.message);
+    }
 
     res.json({ success: true, content });
   } catch (error) {
@@ -290,7 +310,7 @@ export const reviewResume = async (req, res) => {
     const message = error.response?.data
       ? Buffer.from(error.response.data).toString("utf8")
       : error.message;
-    return res.status(status || 500).json({
+    return res.status(status || 502).json({
       success: false,
       message,
     });
