@@ -58,7 +58,7 @@ export const generateBlogTitles = async (req, res) => {
     const { prompt } = req.body;
 
     const response = await AI.chat.completions.create({
-      model: "gemini-2.5-pro",
+      model: "gemini-3.1-pro",
       messages: [
         {
           role: "user",
