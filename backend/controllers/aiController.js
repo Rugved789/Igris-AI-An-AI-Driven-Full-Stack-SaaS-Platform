@@ -24,7 +24,7 @@ export const generateArticle = async (req, res) => {
     const articlePrompt = `${prompt}\n\nWrite a complete, well-structured article of at least ${targetWords} words. Do not stop early. Return only the article content.`;
 
     const response = await AI.chat.completions.create({
-      model: "gemini-2.5-pro",
+      model: "gemini-2.5-flash",
       messages: [
         {
           role: "user",
@@ -58,7 +58,7 @@ export const generateBlogTitles = async (req, res) => {
     const { prompt } = req.body;
 
     const response = await AI.chat.completions.create({
-      model: "gemini-3.1-pro",
+      model: "gemini-2.5-flash",
       messages: [
         {
           role: "user",
