@@ -278,7 +278,7 @@ export const reviewResume = async (req, res) => {
     const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content:\n\n${resumeText}`;
 
     const response = await AI.chat.completions.create({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.0-flash",
       messages: [
         {
           role: "user",
